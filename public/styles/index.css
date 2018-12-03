@@ -20,7 +20,7 @@
 }
 
 .create-new-button{
-  width:100px;
+  width:200px;
   display: block;
 }
 
@@ -30,7 +30,7 @@ select{
 
 /* Modal Stuff */
 .create-new-modal {
-  /* display: none; Hidden by default */
+  display: none; /*Hidden by default*/
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
   padding-top: 100px; /* Location of the box */
@@ -73,4 +73,55 @@ select{
 .create-new-form label{
   display:block;
   margin:auto;
+}
+
+/* The List */
+ul, li{
+  list-style: none;
+}
+
+a, a:hover, a:active{
+  text-decoration: none;
+}
+
+.DoneIt{
+  border:5px solid green;
+}
+
+.TryIt{
+  border: 5px solid red;
+}
+
+.DoneIt .item-heading{
+  background-color: green;
+}
+
+.TryIt .item-heading{
+  background-color:red;
+}
+
+.item-heading-element{
+  display: inline-block;
+  width: 30%
+}
+
+.left{
+  text-align: left;
+}
+
+.middle{
+  text-align: center;
+}
+
+.right{
+  text-align: right;
+}
+
+.item-element{
+  margin: 10px 0;
+}
+
+.inactive-anchor{
+  pointer-events: none;
+  cursor:default;
 }
