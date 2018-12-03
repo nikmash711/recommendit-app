@@ -30,7 +30,7 @@ select{
 
 /* Modal Stuff */
 .create-new-modal {
-  display: none; /*Hidden by default*/
+  /* display: none; Hidden by default */
   position: fixed; /* Stay in place */
   z-index: 1; /* Sit on top */
   padding-top: 100px; /* Location of the box */
@@ -52,15 +52,15 @@ select{
 }
 
 /* The Close Button */
-.close {
+.close-modal {
   color: #aaaaaa;
   float: right;
   font-size: 28px;
   font-weight: bold;
 }
 
-.close:hover,
-.close:focus {
+.close-modal:hover,
+.close-modal:focus {
   color: #000;
   text-decoration: none;
   cursor: pointer;

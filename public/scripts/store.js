@@ -2,6 +2,12 @@
 'use strict';
 
 const store = (function () {
+  const adding = false; 
+
+  const toggleCreatingNew = function(){
+    this.adding = !this.adding;
+  };
+
 
   return {
     items: [
@@ -27,7 +33,8 @@ const store = (function () {
     currentItem: {},
     currentQuery: {
       searchTerm: '',
-    }
+    },
+    toggleCreatingNew,
   };
 
 }());
