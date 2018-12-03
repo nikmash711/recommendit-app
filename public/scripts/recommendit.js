@@ -18,19 +18,21 @@ const recommendit = (function () {
   }
 
   function generateItemsList(list = []) {
-    const listItems = list.map(item => `
+    const listItems = list.map(item => 
+      `
       <li data-id="${item.id}" class="js-item-element item-element ${item.category} ${item.subcategory}">
         <div class = "item-heading">
-          <a class = "item-heading-element left ${item.url === '' ? 'inactive-anchor' : ''}" href = "${item.url}" target = "_blank">${item.title} </a>
+          <a class = "item-heading-element left ${item.url === '' ? 'inactive-anchor' : ''}" href = "${item.url=== ''? '#': item.url}" target = "_blank">${item.title} </a>
           <p class = "item-heading-element middle"> ${item.category}</p>
           <p class = "item-heading-element right"> ${item.subcategory}</p>
         </div>
-        <p> ${item.notes}</p>
+        <p> ${item.notes==='' ? 'No Notes' : item.notes}</p>
         <p> ${item.category === 'DoneIt' ? item.rating : ''} </p>
         <div class="metadata">
             <div class="date">${moment(item.updatedAt).calendar()}</div>
           </div>
-      </li>`);
+      </li>`
+    );
     return listItems.join('');
   }
 
@@ -42,7 +44,7 @@ const recommendit = (function () {
     <input required id = "title" name = "title" type="text" class = "input-title js-input-title" placeholder = "Title">
     
     <label for = "url">URL:</label>
-    <input id = "url" name = "url" type="text" class = "input-url js-input-url" placeholder="URL">
+    <input id = "url" name = "url"  type="url" class = "input-url js-input-url" placeholder="URL">
     
     <label for = "notes">Notes:</label>
     <textarea id = "notes" name = "notes" name="notes" class = "input-notes js-input-notes" placeholder="Write a brief note. If you'd like to, that is!" rows = "4"></textarea>
@@ -118,7 +120,6 @@ const recommendit = (function () {
   const handleCreateItem = function(){
     //event listener on the create button in the form
     $('.js-create-new-form').on('submit', event => {
-      console.log('here in create');
       //prevent default bc its submt
       event.preventDefault();      
       
@@ -140,11 +141,64 @@ const recommendit = (function () {
         })
         .then(response => {
           store.items = response;
+          store.toggleCreatingNew();
           render();
         })
-        .catch(handleErrors);
+        .catch(err => {
+          console.log(err);
+        });
     });
   };
+
+  function handleItemSearchSubmit() {
+    $('.js-search-form').on('submit', event => {
+      event.preventDefault();
+
+      store.currentQuery.searchTerm = $(event.currentTarget).find('input').val();
+
+      api.search('/api/items', store.currentQuery)
+        .then(response => {
+          console.log('here');
+          store.items = response;
+          render();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    });
+  }
+
+  function handleFilterCategory(){
+    $('.js-filter-category-dropdown').change(event=>{
+      store.currentQuery.searchCategory = $(event.currentTarget).val();
+      api.search('/api/items', store.currentQuery)
+        .then(response => {
+          store.items = response;
+          render();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      //render
+      render();
+    });
+  }
+
+  function handleFilterSubcategory(){
+    $('.js-filter-subcategory-dropdown').change(event=>{
+      store.currentQuery.searchSubcategory = $(event.currentTarget).val();
+      api.search('/api/items', store.currentQuery)
+        .then(response => {
+          store.items = response;
+          render();
+        })
+        .catch(err => {
+          console.log(err);
+        });
+      //render
+      render();
+    });
+  }
 
 
   function bindEventListeners() {
@@ -152,6 +206,9 @@ const recommendit = (function () {
     handleCancelAddItem();
     handleClickingClose();
     handleCreateItem();
+    handleItemSearchSubmit();
+    handleFilterCategory();
+    handleFilterSubcategory();
   }
 
   // This object contains the only exposed methods from this module:

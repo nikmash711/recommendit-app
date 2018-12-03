@@ -3,13 +3,11 @@
 
 $(document).ready(function () {
   recommendit.bindEventListeners();
-  recommendit.render();
-
   
-  // api.search('/api/items')
-  //   .then((items) => {
-  //     store.items = items;
-  //     recommendit.render();
-  //   });
+  api.search('/api/items')
+    .then((items) => {
+      store.items = items;
+      recommendit.render();
+    });
   
 });
