@@ -86,24 +86,28 @@ a, a:hover, a:active{
 }
 
 .DoneIt{
-  border:5px solid green;
+  border:5px solid #5dba94;
+  border-top: 0;
 }
 
 .TryIt{
-  border: 5px solid red;
+  border: 5px solid #701705;
+  border-top: 0;
 }
 
 .DoneIt .item-heading{
-  background-color: green;
+  background-color: #5dba94;
 }
 
 .TryIt .item-heading{
-  background-color:red;
+  background-color:#701705;
 }
 
-.item-heading-element{
-  display: inline-block;
-  width: 30%
+a.item-heading-element{
+  padding:15px;
+  display:block;
+  color: white;
+  font-weight: bold;
 }
 
 .left{
@@ -125,4 +129,52 @@ a, a:hover, a:active{
 .inactive-anchor{
   pointer-events: none;
   cursor:default;
+}
+
+.float-right{
+  float:right;
+  margin-top:15px;
+  position:relative;
+  margin-right: 5px;
+}
+
+.edit-span{
+  position: absolute;
+  background-color: black;
+  right:40px;
+  top:-15px;
+  color:white;
+  padding:1px;
+  opacity: 0;
+  font-size:11px;
+  transition: opacity .5s;
+}
+
+.delete-span{
+  position: absolute;
+  background-color:black;
+  right:-2px;
+  top:-15px;
+  color:white;
+  padding:1px;
+  opacity: 0;
+  font-size:11px;
+  transition: opacity .5s;
+}
+
+/* changes the icon's description opacity */
+.edit-item:hover + .edit-span, .delete-item:hover + .delete-span, .edit-item:focus + .edit-span, .delete-item:focus + .delete-span{
+  opacity: 1; 
+} 
+
+.delete-item, .edit-item {
+  background-color: transparent;
+  border: none;
+  color:white;
+}
+
+.delete-item:hover, .edit-item:hover, .delete-item:focus, .edit-item:focus{
+  background-color: transparent;
+  color: black;
+  border: none;
 }

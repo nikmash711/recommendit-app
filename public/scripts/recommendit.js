@@ -21,13 +21,17 @@ const recommendit = (function () {
     const listItems = list.map(item => 
       `
       <li data-id="${item.id}" class="js-item-element item-element ${item.category} ${item.subcategory}">
+      <div class = "float-right">
+        <button aria-label = "edit item" class = "edit-item  js-edit-item"><i class="fas fa-edit"></i></button>
+        <span class = "edit-span js-edit-span">Edit</span>
+        <button aria-label = "delete item" class = "delete-item js-delete-item"><i class="fas fa-trash-alt "></i></button>
+        <span class = "delete-span js-delete-span">Delete</span>
+      </div>
         <div class = "item-heading">
-          <a class = "item-heading-element left ${item.url === '' ? 'inactive-anchor' : ''}" href = "${item.url=== ''? '#': item.url}" target = "_blank">${item.title} </a>
-          <p class = "item-heading-element middle"> ${item.category}</p>
-          <p class = "item-heading-element right"> ${item.subcategory}</p>
+          <a class = "item-heading-element left ${item.url === '' ? 'inactive-anchor' : ''}" href = "${item.url=== ''? '#': item.url}" target = "_blank">${item.subcategory}: ${item.title} </a>
         </div>
-        <p> ${item.notes==='' ? 'No Notes' : item.notes}</p>
-        <p> ${item.category === 'DoneIt' ? item.rating : ''} </p>
+        <p> ${item.category === 'DoneIt' ? generateStars(item.rating) : ''} </p>
+        <p> ${item.notes==='' ? '' : item.notes}</p>
         <div class="metadata">
             <div class="date">${moment(item.updatedAt).calendar()}</div>
           </div>
@@ -36,8 +40,25 @@ const recommendit = (function () {
     return listItems.join('');
   }
 
+  function generateStars(rating){
+    if(rating){
+      const number_of_stars = rating;
+      rating = '';
+      for (let i =0; i < number_of_stars; i++){
+        rating+='<i class="fas fa-star"></i>';
+      }
+      //also put in empty stars
+      for(let i = 0; i < 5 - number_of_stars; i++){
+        rating+='<i class="far fa-star"></i>';
+      }
+    }
+    else{
+      rating = '';
+    }
+    return rating;
+  }
+
   function generateAddItemForm(){
-    console.log('here');
     return `
     <h3>Create New</h3>
     <label for = "title">Title:</label>
@@ -67,6 +88,7 @@ const recommendit = (function () {
       <option value="Thing-To-Do">Thing-To-Do</option>
       <option value="Article">Article</option>
       <option value="Video">Video</option>
+      <option value="Game">Game</option>
     </select>
 
     <label for="rating">Rate It!</label>
@@ -82,6 +104,10 @@ const recommendit = (function () {
     <button type = "submit" class = "submit-new-button js-submit-new-button">Create</button>
     <button type = "button" class = "cancel-create-button js-cancel-create-button">Cancel </button>
     `;
+  }
+
+  function getIdFromItem(item){
+    return $(item).closest('.js-item-element').data('id');
   }
 
   // HANDLER FUNCTIONS 
@@ -133,8 +159,6 @@ const recommendit = (function () {
         rating: form.find('.js-input-rating').val(),
       };
       
-      console.log(itemObj);
-
       api.create('/api/items', itemObj)
         .then(createResponse => {
           return api.search('/api/items', store.currentQuery);
@@ -158,7 +182,6 @@ const recommendit = (function () {
 
       api.search('/api/items', store.currentQuery)
         .then(response => {
-          console.log('here');
           store.items = response;
           render();
         })
@@ -200,6 +223,32 @@ const recommendit = (function () {
     });
   }
 
+  //handles user wanting to delete an item
+  const handleDeleteItem = function(){
+    //event listener for when user clicks on trash icon 
+    $('.js-feed-list').on('click', '.js-delete-item', event=>{
+      //first make sure they really want to delete 
+      const delete_confirm = confirm('Are you sure you want to delete this item?');
+      //if they confirm, go forward to delete
+      if(delete_confirm){
+      //figure out which item we're deleting - get its id 
+        const itemId = getIdFromItem(event.target);
+        //make a request to server to delete it from the server (it doesnt return anything)
+        api.remove(`/api/items/${itemId}`)
+          .then(() => {
+            return api.search('/api/items', store.currentQuery);
+          })
+          .then(response => {
+            store.items = response;
+            render();
+          })
+          .catch(err => {
+            console.log(err);
+          });
+      }
+    });
+  };
+
 
   function bindEventListeners() {
     handleAddItem();
@@ -209,6 +258,7 @@ const recommendit = (function () {
     handleItemSearchSubmit();
     handleFilterCategory();
     handleFilterSubcategory();
+    handleDeleteItem();
   }
 
   // This object contains the only exposed methods from this module:
