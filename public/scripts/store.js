@@ -10,24 +10,7 @@ const store = (function () {
 
 
   return {
-    items: [
-      {
-        title: 'Fantastic Beasts',
-        url: 'http://google.com',
-        notes: 'Great movie, must watch!',
-        category: 'DoneIt',
-        subcategory: 'Movie',
-        rating: 5, 
-      },
-      {
-        title: 'Italy',
-        url: '',
-        notes:'',
-        category: 'TryIt',
-        subcategory: 'Place',
-        rating: 0, 
-      }
-    ],
+    items: [],
     // categories: [],
     // subcategories: [],
     currentItem: {},
